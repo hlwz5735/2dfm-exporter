@@ -11,6 +11,11 @@ const routes: Array<RouteConfig> = [
     component: Home
   },
   {
+    path: '/open-file',
+    name: '打开文件',
+    component: () => import(/* webpackChunkName: "open-file" */ '../views/OpenFile.vue')
+  },
+  {
     path: '/about',
     name: 'About',
     // route level code-splitting
