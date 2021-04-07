@@ -4,18 +4,18 @@
       <a-card title="请选择2dfm player文件路径" style="width: 60%">
         <div>
           <a-input-search
-              v-model="filePath"
-              placeholder="文件路径"
-              enter-button="选择"
-              @search="openFileDialog"
+            v-model="filePath"
+            placeholder="文件路径"
+            enter-button="选择"
+            @search="openFileDialog"
           />
         </div>
         <a-divider />
         <a-button
-            :disabled="!filePath"
-            type="primary"
-            block
-            @click="readPlayerFile"
+          :disabled="!filePath"
+          type="primary"
+          block
+          @click="readPlayerFile"
         >
           读取
         </a-button>
@@ -49,8 +49,8 @@ export default class OpenFile extends Vue {
     this.filePath = result.filePaths[0]
   }
 
-  async readPlayerFile(): Promise<void> {
-    // ...
+  readPlayerFile(): void {
+    this.$router.push('/home/' + encodeURIComponent(this.filePath))
   }
 }
 </script>
