@@ -12,7 +12,7 @@ export default class _2DFMPlayer {
     // int
     scriptCount: number
     // _2DFMScript[scriptCount]
-    scripts: Array<_2DFMScript>
+    scripts: Array<_2DFMScript> = []
 
     // int
     scriptItemCount: number
@@ -20,11 +20,11 @@ export default class _2DFMPlayer {
     // int
     spriteFrameCount: number
     // _2DFMSpriteFrame[spriteFrameCount]
-    spriteFrames: Array<_2DFMSpriteFrame>
+    spriteFrames: Array<_2DFMSpriteFrame> = []
 
     // 8个公共调色盘
-    publicPalettles: Array<_2DFMPalettle>
+    publicPalettles: Array<_2DFMPalettle> = []
 
     soundCount: number
-    sounds: Array<_2DFMSound>
+    sounds: Array<_2DFMSound> = []
 }

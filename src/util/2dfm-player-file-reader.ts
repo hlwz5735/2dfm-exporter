@@ -9,7 +9,7 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
     const player = new _2DFMPlayer()
 
     const fh = await fs.open(path, 'r')
-    
+
     let offset = 0
     let read = await fh.read(new Uint8Array(16), 0, 16, offset)
     offset += 16
@@ -28,15 +28,19 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
     offset += scriptBytes
 
     for (let i = 0; i < player.scriptCount; i++) {
-        const innerOffset = i * 39
         const script = new _2DFMScript()
-        script.offset = offset + innerOffset
+
+        const innerOffset = i * 39
         const innerBytes = read.buffer.slice(innerOffset, innerOffset + 39)
+
+        script.offset = offset + innerOffset
         script.name = textDecoder.decode(innerBytes.slice(0, 32)) || '非法内容'
         script.itemBeginIndex = byteToUShort(innerBytes, 32)
         script.unknownFlag1 = innerBytes[34]
         script.isDefaultScript = innerBytes[35] === 1
         script.unknownBytes = innerBytes.slice(36, 39)
+
+        player.scripts.push(script)
     }
 
     return player
