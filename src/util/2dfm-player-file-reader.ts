@@ -4,6 +4,7 @@ import { promises } from 'fs'
 import { byteToInt, byteToUShort } from './byte-convert-util'
 import _2DFMScriptItem from '@/entity/2dfm-script-item'
 import _2DFMSpriteFrame from '@/entity/2dfm-sprite-frame'
+import _2DFMPalette from '@/entity/2dfm-palette'
 const fs = promises
 
 export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
@@ -72,6 +73,7 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
         script.items = scriptItems.slice(script.itemBeginIndex, script.itemBeginIndex + script.itemCount)
     }
 
+    // 精灵帧的读取
     read = await fh.read(new Uint8Array(4), 0, 4, offset)
     offset += 4
     player.spriteFrameCount = byteToInt(read.buffer)
@@ -86,7 +88,7 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
         frame.unknownFlag1 = byteToInt(headBytes, 0)
         frame.width = byteToInt(headBytes, 4)
         frame.height = byteToInt(headBytes, 8)
-        frame.hasPrivatePalettle = byteToInt(headBytes, 12) === 1
+        frame.hasPrivatePalette = byteToInt(headBytes, 12) === 1
         frame.size = byteToInt(headBytes, 16)
 
         if (frame.size !== 0) {
@@ -94,13 +96,28 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
         } else {
             if (frame.width * frame.height !== 0) {
                 offset += frame.width * frame.height
-                if (frame.hasPrivatePalettle) {
+                if (frame.hasPrivatePalette) {
                     offset += 1024
                 }
             }
         }
 
         player.spriteFrames.push(frame)
+    }
+
+    // 公共调色盘的读取，一共8个公共调色盘
+    const paletteLength = (1024 + 32) * 8
+    read = await fh.read(new Uint8Array(paletteLength), 0, paletteLength, offset)
+    offset += paletteLength
+    const paletteBuffer = read.buffer
+    for (let i = 0; i < 8; i++) {
+        const palette = new _2DFMPalette()
+        let c = i * paletteLength
+        for (; c < i * paletteLength + 1024; c += 4) {
+            palette.pushBGRA(paletteBuffer.slice(c, c + 4))
+        }
+        palette.unknownGap = paletteBuffer.slice(c, c + 32)
+        player.publicPalettes.push(palette)
     }
 
     return player

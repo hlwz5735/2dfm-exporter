@@ -19,7 +19,9 @@
         <a-menu-item disabled>
           受击动作表
         </a-menu-item>
-        <a-menu-item key="SpriteFrameTable">
+        <a-menu-item key="PaletteInfo">
+          公共调色盘
+        </a-menu-item><a-menu-item key="SpriteFrameTable">
           精灵表
         </a-menu-item>
         <a-menu-item key="SoundTable">
@@ -47,12 +49,13 @@ import _2DFMPlayer from '@/entity/2dfm-player'
 import { State } from 'vuex-class'
 import ScriptTable from './player/ScriptTable.vue'
 import BasicInfo from './player/BasicInfo.vue'
+import PaletteInfo from './player/PaletteInfo.vue'
 import SpriteFrameTable from './player/SpriteFrameTable.vue'
 import SoundTable from './player/SoundTable.vue'
 const { ipcRenderer }  = window
 
 @Component({
-  components: { ScriptTable, BasicInfo, SpriteFrameTable, SoundTable }
+  components: { ScriptTable, BasicInfo, SpriteFrameTable, SoundTable, PaletteInfo }
 })
 export default class Home extends Vue {
   @State('playerFilePath')

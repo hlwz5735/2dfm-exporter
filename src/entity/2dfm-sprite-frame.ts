@@ -3,7 +3,7 @@ export default class _2DFMSpriteFrame {
     offset: number
     width: number
     height: number
-    hasPrivatePalettle: boolean
+    hasPrivatePalette: boolean
     size: number
 
     compressed(): boolean {
@@ -12,7 +12,7 @@ export default class _2DFMSpriteFrame {
 
     realSize(): number {
         let size = 0
-        if (this.hasPrivatePalettle) {
+        if (this.hasPrivatePalette) {
             size += 1024
         }
         size += this.width * this.height

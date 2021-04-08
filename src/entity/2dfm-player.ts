@@ -1,4 +1,4 @@
-import _2DFMPalettle from './2dfm-palettle'
+import _2DFMPalette from './2dfm-palette'
 import _2DFMScript from './2dfm-script'
 import _2DFMSound from './2dfm-sound'
 import _2DFMSpriteFrame from './2dfm-sprite-frame'
@@ -23,7 +23,7 @@ export default class _2DFMPlayer {
     spriteFrames: Array<_2DFMSpriteFrame> = []
 
     // 8个公共调色盘
-    publicPalettles: Array<_2DFMPalettle> = []
+    publicPalettes: Array<_2DFMPalette> = []
 
     soundCount: number
     sounds: Array<_2DFMSound> = []
