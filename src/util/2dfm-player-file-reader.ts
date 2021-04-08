@@ -5,6 +5,7 @@ import { byteToInt, byteToUShort } from './byte-convert-util'
 import _2DFMScriptItem from '@/entity/2dfm-script-item'
 import _2DFMSpriteFrame from '@/entity/2dfm-sprite-frame'
 import _2DFMPalette from '@/entity/2dfm-palette'
+import _2DFMSound from '@/entity/2dfm-sound'
 const fs = promises
 
 export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
@@ -118,6 +119,27 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
         }
         palette.unknownGap = paletteBuffer.slice(c, c + 32)
         player.publicPalettes.push(palette)
+    }
+
+    // 声音信息的读取
+    read = await fh.read(new Uint8Array(4), 0, 4, offset)
+    offset += 4
+    player.soundCount = byteToInt(read.buffer)
+    for (let i = 0; i < player.soundCount; i++) {
+        const sound = new _2DFMSound()
+        sound.offset = offset
+        const headLength = 42
+        read = await fh.read(new Uint8Array(headLength), 0, headLength, offset)
+        offset += headLength
+        const buffer = read.buffer
+        sound.unknownFlag = byteToInt(buffer)
+        sound.name = textDecoder.decode(buffer.slice(4, 36)) || '非法内容'
+        sound.size = byteToInt(buffer, 36)
+        sound.unknownFlag2 = byteToUShort(buffer, 40)
+
+        offset += sound.size
+
+        player.sounds.push(sound)
     }
 
     return player
