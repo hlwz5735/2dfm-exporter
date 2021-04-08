@@ -27,12 +27,22 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { State } from 'vuex-class'
 const { remote } = window
 
 @Component
 export default class OpenFile extends Vue {
-  filePath = ''
   spinning = false
+
+  @State('playerFilePath')
+  filePath: string
+
+  created(): void {
+    const filePath = localStorage.getItem('lastFilePath')
+    if (filePath) {
+      this.$store.commit('setPlayerFilePath', filePath)
+    }
+  }
 
   async openFileDialog(): Promise<void> {
     const result = await remote.dialog.showOpenDialog({
@@ -46,11 +56,14 @@ export default class OpenFile extends Vue {
     if (result.canceled) {
       return
     }
-    this.filePath = result.filePaths[0]
+
+    const filePath = result.filePaths[0]
+    this.$store.commit('setPlayerFilePath', filePath)
+    localStorage.setItem('lastFilePath', filePath)
   }
 
   readPlayerFile(): void {
-    this.$router.push('/home/' + encodeURIComponent(this.filePath))
+    this.$router.push('/home')
   }
 }
 </script>

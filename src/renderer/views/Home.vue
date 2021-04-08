@@ -6,8 +6,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import _2DFMPlayer from '@/entity/2dfm-player'
+import { State } from 'vuex-class'
 const { ipcRenderer }  = window
 
 @Component({
@@ -26,7 +27,7 @@ export default class Home extends Vue {
     ipcRenderer.send('read-2dfm-player-file', decodeURIComponent(this.filePath))
   }
 
-  @Prop()
+  @State('playerFilePath')
   filePath: string
 
   player: _2DFMPlayer | null = null

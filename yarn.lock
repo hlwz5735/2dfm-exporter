@@ -10238,6 +10238,11 @@ vue@^2.6.11:
   resolved "https://registry.npm.taobao.org/vue/download/vue-2.6.12.tgz?cache=0&sync_timestamp=1617321643721&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue%2Fdownload%2Fvue-2.6.12.tgz#f5ebd4fa6bd2869403e29a896aed4904456c9123"
   integrity sha1-9evU+mvShpQD4pqJau1JBEVskSM=
 
+vuex-class@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.npm.taobao.org/vuex-class/download/vuex-class-0.3.2.tgz#c7e96a076c1682137d4d23a8dcfdc63f220e17a8"
+  integrity sha1-x+lqB2wWghN9TSOo3P3GPyIOF6g=
+
 vuex@^3.4.0:
   version "3.6.2"
   resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.6.2.tgz?cache=0&sync_timestamp=1612277442796&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuex%2Fdownload%2Fvuex-3.6.2.tgz#236bc086a870c3ae79946f107f16de59d5895e71"

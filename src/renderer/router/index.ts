@@ -15,12 +15,6 @@ const routes: Array<RouteConfig> = [
     component: Home
   },
   {
-    path: '/home/:filePath',
-    props: true,
-    name: 'Home',
-    component: Home
-  },
-  {
     path: '/open-file',
     name: '打开文件',
     component: () => import(/* webpackChunkName: "open-file" */ '../views/OpenFile.vue')
