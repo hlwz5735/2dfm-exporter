@@ -5,12 +5,12 @@ export default class _2DFMSpriteFrame {
     height: number
     hasPrivatePalettle: boolean
     size: number
-    
-    get compressed(): boolean {
+
+    compressed(): boolean {
         return this.size !== 0
     }
-    
-    get realSize(): number {
+
+    realSize(): number {
         let size = 0
         if (this.hasPrivatePalettle) {
             size += 1024

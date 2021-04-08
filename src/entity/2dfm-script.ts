@@ -1,8 +1,6 @@
 import _2DFMScriptItem from "./2dfm-script-item"
 
 export default class _2DFMScript {
-    // 所属文件的偏移度
-    offset: number
     // CHAR[32]
     name: string
     // SHORT

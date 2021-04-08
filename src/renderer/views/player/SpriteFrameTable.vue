@@ -3,7 +3,7 @@
     <a-layout-sider theme="light" style="height: 100%; overflow: auto">
       <a-list bordered :data-source="player.spriteFrames">
         <a-list-item slot="renderItem" slot-scope="item, index">
-          {{ index }} - {{ item.name }}
+          {{ index }} - {{ item.width }} * {{ item.height }}
         </a-list-item>
       </a-list>
     </a-layout-sider>
