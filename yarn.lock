@@ -1016,6 +1016,11 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
+"@quasar/extras@^1.0.0":
+  version "1.10.2"
+  resolved "https://registry.npm.taobao.org/@quasar/extras/download/@quasar/extras-1.10.2.tgz#8992bac8f94a077494ee4fae653729a3a5a47e6f"
+  integrity sha1-iZK6yPlKB3SU7k+uZTcpo6Wkfm8=
+
 "@simonwep/pickr@~1.7.0":
   version "1.7.4"
   resolved "https://registry.npm.taobao.org/@simonwep/pickr/download/@simonwep/pickr-1.7.4.tgz#b14fcd945890388b870cd6db4d6c78d531f25141"
@@ -8217,6 +8222,11 @@ qs@~6.5.2:
   resolved "https://registry.npm.taobao.org/qs/download/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
   integrity sha1-yzroBuh0BERYTvFUzo7pjUA/PjY=
 
+quasar@^1.0.0:
+  version "1.15.10"
+  resolved "https://registry.npm.taobao.org/quasar/download/quasar-1.15.10.tgz#83325993a500fbe37537f773f5089b648f22fcfd"
+  integrity sha1-gzJZk6UA++N1N/dz9QibZI8i/P0=
+
 query-string@^4.1.0:
   version "4.3.4"
   resolved "https://registry.npm.taobao.org/query-string/download/query-string-4.3.4.tgz?cache=0&sync_timestamp=1616068548945&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fquery-string%2Fdownload%2Fquery-string-4.3.4.tgz#bbb693b9ca915c232515b228b1a02b609043dbeb"
@@ -10159,6 +10169,11 @@ vue-cli-plugin-electron-builder@^2.0.0-rc.6:
     webpack-chain "^6.0.0"
     webpack-merge "^4.2.2"
     yargs "^15.3.1"
+
+vue-cli-plugin-quasar@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.npm.taobao.org/vue-cli-plugin-quasar/download/vue-cli-plugin-quasar-3.0.1.tgz#b9bf493adb57e9e36b3f6646cb74bc049129e80b"
+  integrity sha1-ub9JOttX6eNrP2ZGy3S8BJEp6As=
 
 vue-eslint-parser@^7.0.0:
   version "7.6.0"

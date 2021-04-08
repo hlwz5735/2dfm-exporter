@@ -142,5 +142,6 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
         player.sounds.push(sound)
     }
 
+    fh.close()
     return player
 }
