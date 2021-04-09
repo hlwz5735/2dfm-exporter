@@ -1,11 +1,12 @@
 import Vue, { VNode } from 'vue'
 import { IpcRenderer, Remote } from 'electron'
+import fs from 'fs'
 
 declare global {
   interface Window {
     ipcRenderer: IpcRenderer;
     remote: Remote;
-    fs: any;
+    fs: fs.promises;
     TextDecoder: any;
     zlib: any;
   }

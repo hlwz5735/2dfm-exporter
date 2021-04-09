@@ -5,10 +5,10 @@
         <q-item
           v-for="(item, index) in player.sounds"
           :key="index"
+          v-ripple
           :active="selectingSoundIndex === index"
           dense
           clickable
-          v-ripple
           @click="onSoundSelect(index)"
         >
           <q-item-section>
@@ -19,6 +19,7 @@
     </a-layout-sider>
     <a-layout-content>
       {{ sound.name }}
+      <div ref="theContainer"></div>
     </a-layout-content>
   </a-layout>
 </template>
@@ -28,6 +29,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import _2DFMPlayer from '@/entity/2dfm-player'
 import _2DFMSound from '@/entity/2dfm-sound'
+import { FileHandle } from 'fs/promises'
 const { fs } = window
 @Component({
   name: 'SoundTable',
@@ -42,14 +44,14 @@ export default class SoundTable extends Vue {
   /** 当前选中的声音索引 */
   selectingSoundIndex = 0
 
-  fh: fs.FileHandle
+  fh: FileHandle
 
   get sound(): _2DFMSound {
     return this.player.sounds[this.selectingSoundIndex]
   }
 
-  created(): void {
-    this.fh = fs.open(this.$store.state.playerFilePath)
+  async created(): Promise<void> {
+    this.fh = await fs.open(this.$store.state.playerFilePath)
   }
 
   beforeDestroy(): void {
@@ -58,23 +60,25 @@ export default class SoundTable extends Vue {
 
   onSoundSelect(index: number): void {
     this.selectingSoundIndex = index
+    this.play()
   }
 
-  // play() {
-  //   if (!val) {
-  //     return
-  //   }
-  //   const blob = new Blob([val], { type: this.mimeType })
-  //   const audio = document.createElement('audio')
-  //   audio.src = window.URL.createObjectURL(blob)
-  //   audio.controls = true
-  //   audio.autoplay = true
-  //   const container = this.$refs.theContainer as HTMLDivElement
-  //   if (container.hasChildNodes()) {
-  //     container.removeChild(container.childNodes[0])
-  //   }
-  //   container.appendChild(audio)
-  // }
+  async play(): Promise<void> {
+    if (this.sound.size <= 0) {
+      return
+    }
+    const result = await this.fh.read(new Uint8Array(this.sound.size), 0, this.sound.size, this.sound.offset + 42)
+    const blob = new Blob([result.buffer.buffer], { type: 'audio/x-wav' })
+    const audio = document.createElement('audio')
+    audio.src = window.URL.createObjectURL(blob)
+    audio.controls = true
+    audio.autoplay = true
+    const container = this.$refs.theContainer as HTMLDivElement
+    if (container.hasChildNodes()) {
+      container.removeChild(container.childNodes[0])
+    }
+    container.appendChild(audio)
+  }
 }
 </script>
 
