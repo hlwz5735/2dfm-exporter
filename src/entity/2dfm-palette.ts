@@ -6,12 +6,12 @@ export default class _2DFMPalette {
     // BYTE[32]，只有公共调色盘才有
     unknownGap?: Uint8Array
 
-    pushBGRA(buffer: Uint8Array): void {
+    pushBGRA(buffer: Uint8Array, index = 0): void {
         const color = new PaletteColor()
-        color.rawData[0] = buffer[2]
-        color.rawData[1] = buffer[1]
-        color.rawData[2] = buffer[0]
-        color.rawData[3] = buffer[3] === 0 ? 0 : 255
+        color.rawData[0] = buffer[index + 2]
+        color.rawData[1] = buffer[index + 1]
+        color.rawData[2] = buffer[index]
+        color.rawData[3] = 255 // buffer[index + 3] === 0 ? 0 : 255
         this.colors.push(color)
     }
 }

@@ -4,14 +4,14 @@
       <q-list bordered separator>
         <q-item
           v-for="(item, index) in notEmptySprites"
-          :key="index"
+          :key="item.index"
           v-ripple
           :active="selectingIndex === index"
           dense
           clickable
-          @click="onSpriteSelect(index)"
+          @click="onSpriteSelect(item.index)"
         >
-          {{ index }} - {{ item.width }} * {{ item.height }}
+          {{ item.index }} - {{ item.width }} * {{ item.height }}
         </q-item>
       </q-list>
     </a-layout-sider>
@@ -23,11 +23,13 @@
 
 <script lang="ts">
 
+import { FileHandle } from 'fs/promises'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import _2DFMPlayer from '@/entity/2dfm-player'
 import _2DFMSpriteFrame from '@/entity/2dfm-sprite-frame'
-import { FileHandle } from 'fs/promises'
+import _2DFMPalette from '@/entity/2dfm-palette'
 import { decompress } from '@/util/2dfm-image-decompress'
+import { readPalette } from '@/util/2dfm-palette-reader'
 const { fs } = window
 @Component({
   name: 'SpriteFrameTable',
@@ -88,37 +90,15 @@ export default class SpriteFrameTable extends Vue {
     this.canvas.width = sprite.width
     this.canvas.height = sprite.height
 
+    let palette: _2DFMPalette
 
-    let paletteBuffer = new Uint8Array(0)
     let imageBuffer
     if (sprite.hasPrivatePalette) {
-      paletteBuffer = buffer.slice(0, 1024)
+      palette = readPalette(buffer, true)
       imageBuffer = buffer.slice(1024)
     } else {
+      palette = this.player.publicPalettes[0]
       imageBuffer = buffer
-    }
-
-    const palette = []
-    for (let i = 0; i < 256; i++) {
-      if (sprite.hasPrivatePalette) {
-        const b = paletteBuffer[i * 4]
-        const g = paletteBuffer[i * 4 + 1]
-        const r = paletteBuffer[i * 4 + 2]
-        let a = paletteBuffer[i * 4 + 3] === 1 ? 0 : 255
-        if (r === 0 && g === 0 && b === 0) {
-          a = 0
-        }
-
-        palette.push(r)
-        palette.push(g)
-        palette.push(b)
-        palette.push(a)
-      } else {
-        palette.push(i)
-        palette.push(i)
-        palette.push(i)
-        palette.push(255)
-      }
     }
 
     const imageDataBuffer = new Uint8ClampedArray(width * height * 4)
@@ -127,11 +107,11 @@ export default class SpriteFrameTable extends Vue {
       for (let y = 0; y < height; y++) {
         const pixelIndex = y * width + x
         const colorIndex = imageBuffer[pixelIndex]
-
-        imageDataBuffer[pixelIndex * 4] = palette[colorIndex * 4]
-        imageDataBuffer[pixelIndex * 4 + 1] = palette[colorIndex * 4 + 1]
-        imageDataBuffer[pixelIndex * 4 + 2] = palette[colorIndex * 4 + 2]
-        imageDataBuffer[pixelIndex * 4 + 3] = palette[colorIndex * 4 + 3]
+        const color = palette.colors[colorIndex]
+        imageDataBuffer[pixelIndex * 4] = color.rawData[0]
+        imageDataBuffer[pixelIndex * 4 + 1] = color.rawData[1]
+        imageDataBuffer[pixelIndex * 4 + 2] = color.rawData[2]
+        imageDataBuffer[pixelIndex * 4 + 3] = color.rawData[3]
       }
     }
 

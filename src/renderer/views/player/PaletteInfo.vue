@@ -41,6 +41,7 @@ export default class PaletteInfo extends Vue {
 
   onPaletteChange(newKey: number): void {
     const palette = this.player.publicPalettes[newKey]
+    debugger
     if (!palette) {
       return
     }

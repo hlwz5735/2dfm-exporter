@@ -1,11 +1,11 @@
+import { promises } from 'fs'
 import _2DFMPlayer from '@/entity/2dfm-player'
 import _2DFMScript from '@/entity/2dfm-script'
-import { promises } from 'fs'
-import { byteToInt, byteToUShort } from './byte-convert-util'
 import _2DFMScriptItem from '@/entity/2dfm-script-item'
 import _2DFMSpriteFrame from '@/entity/2dfm-sprite-frame'
-import _2DFMPalette from '@/entity/2dfm-palette'
 import _2DFMSound from '@/entity/2dfm-sound'
+import { readPalette } from '@/util/2dfm-palette-reader'
+import { byteToInt, byteToUShort } from './byte-convert-util'
 const fs = promises
 
 export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
@@ -81,6 +81,7 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
     for (let i = 0; i < player.spriteFrameCount; i++) {
         const frame = new _2DFMSpriteFrame()
         frame.offset = offset
+        frame.index = i
 
         read = await fh.read(new Uint8Array(20), 0, 20, offset)
         offset += 20
@@ -107,18 +108,15 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
     }
 
     // 公共调色盘的读取，一共8个公共调色盘
-    const paletteLength = (1024 + 32) * 8
+    const publicPaletteLength = 1024 + 32
+    const paletteLength = publicPaletteLength * 8
     read = await fh.read(new Uint8Array(paletteLength), 0, paletteLength, offset)
     offset += paletteLength
     const paletteBuffer = read.buffer
     for (let i = 0; i < 8; i++) {
-        const palette = new _2DFMPalette()
-        let c = i * paletteLength
-        for (; c < i * paletteLength + 1024; c += 4) {
-            palette.pushBGRA(paletteBuffer.slice(c, c + 4))
-        }
-        palette.unknownGap = paletteBuffer.slice(c, c + 32)
-        player.publicPalettes.push(palette)
+        player.publicPalettes.push(
+          readPalette(paletteBuffer.slice(i * publicPaletteLength, (i + 1) * publicPaletteLength), false)
+        )
     }
 
     // 声音信息的读取

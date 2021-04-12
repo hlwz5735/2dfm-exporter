@@ -1,6 +1,7 @@
 export default class _2DFMSpriteFrame {
     // 所属文件的偏移度
     offset: number
+    index: number
     width: number
     height: number
     hasPrivatePalette: boolean
