@@ -3,10 +3,10 @@
     <a-layout-sider theme="light" style="height: 100%; overflow: auto">
       <q-list bordered separator>
         <q-item
-          v-for="(item, index) in notEmptySprites"
+          v-for="item in notEmptySprites"
           :key="item.index"
           v-ripple
-          :active="selectingIndex === index"
+          :active="selectingIndex === item.index"
           dense
           clickable
           @click="onSpriteSelect(item.index)"
