@@ -66,13 +66,17 @@ export default class SpriteFrameTable extends Vue {
     return this.player.spriteFrames.filter(val => val.width * val.height !== 0)
   }
 
+  get selectingSprite() {
+    return this.player.spriteFrames[this.selectingIndex]
+  }
+
   onSpriteSelect(index: number): void {
     this.selectingIndex = index
     this.drawSpriteFrame()
   }
 
   async drawSpriteFrame(): Promise<void> {
-    const sprite = this.player.spriteFrames[this.selectingIndex]
+    const sprite = this.selectingSprite
     if (!sprite || sprite.width * sprite.height === 0) {
       return
     }

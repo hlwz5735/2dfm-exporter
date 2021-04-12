@@ -1,5 +1,5 @@
 /** 变种LSZZ算法 */
-import { byteToShort } from '@/util/byte-convert-util'
+import { byteToUShort } from '@/util/byte-convert-util'
 
 export function decompress(originBytes: Uint8Array, destSize: number): Uint8Array | null {
   if (destSize <= 0) {
@@ -23,7 +23,7 @@ export function decompress(originBytes: Uint8Array, destSize: number): Uint8Arra
       if (current === 0) {
         inputOffset += 1
         // 后2字节对应的整数
-        current = byteToShort(originBytes, inputOffset)
+        current = byteToUShort(originBytes, inputOffset)
         inputOffset += 2
         //
         const highBits = originBytes[inputOffset] << 16
