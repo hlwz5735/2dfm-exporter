@@ -74,8 +74,11 @@ export function decompress(originBytes: Uint8Array, destSize: number): Uint8Arra
           backTraceCount = (originBytes[inputOffset] + 1) << 8
         }
         const backTraceStart = resultPointer - backTraceCount
-        const content = result.slice(backTraceStart, backTraceStart + current)
-        result.set(content, resultPointer)
+        for (let i = 0; i < current; i++) {
+          result[resultPointer + i] = result[backTraceStart + i]
+        }
+        // const content = result.slice(backTraceStart, backTraceStart + current)
+        // result.set(content, resultPointer)
         resultPointer += current
       } break
     }
