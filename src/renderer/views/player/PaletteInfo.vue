@@ -1,7 +1,12 @@
 <template>
-  <a-layout-content>
-    <canvas ref="theCanvas"></canvas>
-    <a-tabs @change="onPaletteChange">
+  <a-layout-content class="flex fill-height text-center">
+    <div class="mv-center" style="flex-grow: 1;">
+      <palette-viewer
+        :palette="palette"
+        :cell-size="15"
+      />
+    </div>
+    <a-tabs v-model="selectingPaletteIndex">
       <a-tab-pane
         v-for="(item, index) in player.publicPalettes"
         :key="index"
@@ -15,50 +20,40 @@
 
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import _2DFMPlayer from '@/entity/2dfm-player'
-import { PaletteColor } from '@/entity/2dfm-palette'
+import _2DFMPalette from '@/entity/2dfm-palette'
+import PaletteViewer from '@/renderer/components/PaletteViewer.vue'
 
 @Component({
   name: 'PaletteInfo',
-  components: {}
+  components: { PaletteViewer }
 })
 export default class PaletteInfo extends Vue {
   @Prop({
     required: true
   })
   player: _2DFMPlayer
+  selectingPaletteIndex = 0
 
-  canvas: HTMLCanvasElement
-  ctx: CanvasRenderingContext2D
-
-  mounted(): void {
-    this.canvas = this.$refs.theCanvas as HTMLCanvasElement
-    this.canvas.width = 160
-    this.canvas.height = 160
-    this.ctx = this.canvas.getContext('2d')!
-
-    this.onPaletteChange(0)
-  }
-
-  onPaletteChange(newKey: number): void {
-    const palette = this.player.publicPalettes[newKey]
-    if (!palette) {
-      return
-    }
-
-    this.ctx.clearRect(0, 0, 160, 160)
-    this.ctx.save()
-    for (let y = 0; y < 16; y++) {
-      for (let x = 0; x < 16; x++) {
-        const i = y * 16 + x
-        this.ctx.fillStyle = PaletteColor.prototype.rgbaValue.call(palette.colors[i])
-        this.ctx.fillRect(x * 10, y * 10, 10, 10)
-      }
-    }
-    this.ctx.restore()
+  get palette(): _2DFMPalette {
+    return this.player.publicPalettes[this.selectingPaletteIndex]
   }
 }
 </script>
 
 <style lang="less" scoped>
-
+.flex {
+  display: flex;
+  flex-direction: column;
+}
+.fill-height {
+  height: calc(100vh - 64px);
+}
+.text-center {
+  text-align: center;
+}
+.mv-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>

@@ -1,3 +1,5 @@
+import _2DFMPalette from '@/entity/2dfm-palette'
+
 export default class _2DFMSpriteFrame {
     // 所属文件的偏移度
     offset: number
@@ -5,6 +7,7 @@ export default class _2DFMSpriteFrame {
     width: number
     height: number
     hasPrivatePalette: boolean
+    privatePalette: _2DFMPalette | null = null
     size: number
 
     compressed(): boolean {
