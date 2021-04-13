@@ -2,7 +2,16 @@
   <a-layout v-if="player">
     <a-layout-header style="display: flex;">
       <div class="player-name">
-        {{ player.name }}
+        <a-dropdown>
+          <a>
+            {{ player.name }} <a-icon type="down" />
+          </a>
+          <a-menu slot="overlay">
+            <a-menu-item @click="$router.back()">
+              返回
+            </a-menu-item>
+          </a-menu>
+        </a-dropdown>
       </div>
       <a-menu
         v-model="menuSelected"
@@ -40,7 +49,7 @@
     </a-layout-header>
     <component :is="layoutComponent" :player="player" />
   </a-layout>
-  <a-empty v-else />
+  <a-empty v-else style="margin-top: 15%;" />
 </template>
 
 <script lang="ts">
