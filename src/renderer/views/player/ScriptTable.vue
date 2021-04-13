@@ -1,11 +1,17 @@
 <template>
   <a-layout style="height: calc(100vh - 64px)">
     <a-layout-sider theme="light" style="height: 100%; overflow: auto">
-      <a-list bordered :data-source="player.scripts">
-        <a-list-item slot="renderItem" slot-scope="item, index">
+      <q-list bordered separator>
+        <q-item
+          v-for="(item, index) in player.scripts"
+          :key="index"
+          v-ripple
+          dense
+          clickable
+        >
           {{ index }} - {{ item.name }}
-        </a-list-item>
-      </a-list>
+        </q-item>
+      </q-list>
     </a-layout-sider>
     <a-layout-content>
       content
