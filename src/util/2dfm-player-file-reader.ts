@@ -9,7 +9,6 @@ import { byteToInt, byteToUShort } from './byte-convert-util'
 const fs = promises
 
 export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
-    const textDecoder = new TextDecoder('gb2312')
     const player = new _2DFMPlayer()
 
     const fh = await fs.open(path, 'r')
@@ -21,7 +20,7 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
 
     read = await fh.read(new Uint8Array(256), 0, 256, offset)
     offset += 256
-    player.name = textDecoder.decode(read.buffer) || '非法内容'
+    player.name = decodeToGb2312(read.buffer) || '非法内容'
 
     read = await fh.read(new Uint8Array(4), 0, 4, offset)
     offset += 4
@@ -38,7 +37,7 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
         const innerOffset = i * 39
         const innerBytes = read.buffer.slice(innerOffset, innerOffset + 39)
 
-        script.name = textDecoder.decode(innerBytes.slice(0, 32)) || '非法内容'
+        script.name = decodeToGb2312(innerBytes.slice(0, 32)) || '非法内容'
         script.itemBeginIndex = byteToUShort(innerBytes, 32)
         script.unknownFlag1 = innerBytes[34]
         script.isDefaultScript = innerBytes[35] === 1
@@ -131,7 +130,7 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
         offset += headLength
         const buffer = read.buffer
         sound.unknownFlag = byteToInt(buffer)
-        sound.name = textDecoder.decode(buffer.slice(4, 36)) || '非法内容'
+        sound.name = decodeToGb2312(buffer.slice(4, 36)) || '非法内容'
         sound.size = byteToInt(buffer, 36)
         sound.unknownFlag2 = byteToUShort(buffer, 40)
 
@@ -142,4 +141,14 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
 
     fh.close()
     return player
+}
+
+const textDecoder = new TextDecoder('gb2312')
+function decodeToGb2312(buffer: Uint8Array) {
+    const rawStr = textDecoder.decode(buffer)
+    const endIdx = rawStr.indexOf('\u0000')
+    if (endIdx !== -1) {
+        return rawStr.substr(0, endIdx)
+    }
+    return rawStr
 }
