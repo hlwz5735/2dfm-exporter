@@ -2,6 +2,7 @@ import _2DFMPalette from './2dfm-palette'
 import _2DFMScript from './2dfm-script'
 import _2DFMSound from './2dfm-sound'
 import _2DFMSpriteFrame from './2dfm-sprite-frame'
+import _2DFMScriptItem from '@/entity/2dfm-script-item'
 
 export default class _2DFMPlayer {
     // BYTE[16]
@@ -11,11 +12,14 @@ export default class _2DFMPlayer {
 
     // int
     scriptCount: number
-    // _2DFMScript[scriptCount]
+    /** 脚本列表 */
     scripts: Array<_2DFMScript> = []
 
     // int
     scriptItemCount: number
+
+    /** 脚本项的列表（冗余） */
+    scriptItems: Array<_2DFMScriptItem> = []
 
     // int
     spriteFrameCount: number

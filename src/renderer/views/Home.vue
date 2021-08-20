@@ -49,7 +49,11 @@
     </a-layout-header>
     <component :is="layoutComponent" :player="player" />
   </a-layout>
-  <a-empty v-else style="margin-top: 15%;" />
+  <a-skeleton
+    v-else
+    active
+    :paragraph="{ rows: 10 }"
+  />
 </template>
 
 <script lang="ts">

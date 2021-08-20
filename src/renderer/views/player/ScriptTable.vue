@@ -8,13 +8,17 @@
           v-ripple
           dense
           clickable
+          @click="onScriptSelected(index)"
         >
           {{ index }} - {{ item.name }}
         </q-item>
       </q-list>
     </a-layout-sider>
     <a-layout-content>
-      content
+      <script-content
+        v-if="selectingScript"
+        :script="selectingScript"
+      />
     </a-layout-content>
   </a-layout>
 </template>
@@ -23,15 +27,31 @@
 
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import _2DFMPlayer from '@/entity/2dfm-player'
+import _2DFMScript from '@/entity/2dfm-script'
+import ScriptContent from '@/renderer/components/ScriptContent/ScriptContent.vue'
 @Component({
   name: 'ScriptTable',
-  components: {}
+  components: { ScriptContent }
 })
 export default class ScriptTable extends Vue {
   @Prop({
     required: true
   })
   player: _2DFMPlayer
+
+  selectingIndex = 0
+
+  get selectingScript(): _2DFMScript | null {
+    if (this.selectingIndex >= 0 && this.selectingIndex < this.player?.scripts?.length) {
+      return this.player.scripts[this.selectingIndex]
+    } else {
+      return null
+    }
+  }
+
+  onScriptSelected(index: number): void {
+    this.selectingIndex = index
+  }
 }
 </script>
 

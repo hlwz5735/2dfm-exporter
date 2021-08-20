@@ -52,7 +52,7 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
 
     // 每个脚本格子16字节
     const scriptItemBytes = player.scriptItemCount * 16
-    read = await fh.read(new Uint8Array(scriptBytes), 0, scriptBytes, offset)
+    read = await fh.read(new Uint8Array(scriptItemBytes), 0, scriptItemBytes, offset)
     offset += scriptItemBytes
     const scriptItems: Array<_2DFMScriptItem> = []
     // 读取脚本格子信息
@@ -67,9 +67,16 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
 
         scriptItems.push(scriptItem)
     }
+
+    player.scriptItems = scriptItems
     // 将格子信息分配给脚本
     for (let i = 0; i < player.scriptCount; i++) {
         const script = player.scripts[i]
+        if (i < player.scriptCount - 1) {
+            script.itemCount = player.scripts[i + 1].itemBeginIndex - script.itemBeginIndex
+        } else {
+            script.itemCount = player.scriptItemCount - script.itemBeginIndex
+        }
         script.items = scriptItems.slice(script.itemBeginIndex, script.itemBeginIndex + script.itemCount)
     }
 

@@ -12,6 +12,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "inlineSources": true,
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
