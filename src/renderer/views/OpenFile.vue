@@ -27,20 +27,24 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { State } from 'vuex-class'
 const { remote } = window
 
 @Component
 export default class OpenFile extends Vue {
+
+  get filePath(): string | undefined | null {
+    return this.$store.state.playerFilePath
+  }
+  set filePath(val: string | undefined | null) {
+    this.$store.commit('setPlayerFilePath', val)
+  }
+
   spinning = false
 
-  @State('playerFilePath')
-  filePath: string
-
   created(): void {
-    const filePath = localStorage.getItem('lastFilePath')
-    if (filePath) {
-      this.$store.commit('setPlayerFilePath', filePath)
+    const lastFilePath = localStorage.getItem('lastFilePath')
+    if (lastFilePath) {
+      this.filePath = lastFilePath
     }
   }
 

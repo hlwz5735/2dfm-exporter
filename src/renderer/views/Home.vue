@@ -54,8 +54,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import _2DFMPlayer from '@/entity/2dfm-player'
 import { State } from 'vuex-class'
+import _2DFMPlayer from '@/entity/2dfm-player'
 import ScriptTable from './player/ScriptTable.vue'
 import BasicInfo from './player/BasicInfo.vue'
 import PaletteInfo from './player/PaletteInfo.vue'
@@ -83,12 +83,19 @@ export default class Home extends Vue {
 
   created(): void {
     if (!this.filePath) {
-      this.$router.push('/open-file')
+      this.$router.replace('/open-file')
       return
     }
 
     ipcRenderer.once('read-2dfm-player-file-complete', (_, player) => {
       this.player = player
+    })
+    ipcRenderer.once('read-2dfm-player-file-failed', () => {
+      this.$error({
+        title: '错误',
+        content: '文件打开失败！'
+      })
+      this.$router.replace('/open-file')
     })
     ipcRenderer.send('read-2dfm-player-file', decodeURIComponent(this.filePath))
   }
