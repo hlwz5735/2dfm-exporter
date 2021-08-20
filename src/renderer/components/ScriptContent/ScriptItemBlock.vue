@@ -38,9 +38,27 @@ export default class ScriptTable extends Vue {
   get itemName(): string {
     switch (this.item?.type) {
       case 0:
-        return '头'
+        return '初'
+      case 1:
+        return '移'
+      case 3:
+        return '声'
+      case 4:
+        return '物'
+      case 12:
+        return '图'
+      case 14:
+        return '效'
+      case 25:
+        return '防'
+      case 30:
+        return '销'
+      case 35:
+        return '彩'
+      case 37:
+        return '残'
       default:
-        return '疑'
+        return '' + this.item?.type
     }
   }
 

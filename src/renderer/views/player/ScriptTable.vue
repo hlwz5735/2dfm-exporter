@@ -6,6 +6,7 @@
           v-for="(item, index) in player.scripts"
           :key="index"
           v-ripple
+          :active="selectingIndex === index"
           dense
           clickable
           @click="onScriptSelected(index)"
@@ -17,7 +18,9 @@
     <a-layout-content>
       <script-content
         v-if="selectingScript"
+        :script-index="selectingIndex"
         :script="selectingScript"
+        @jump-to="selectingIndex = $event"
       />
     </a-layout-content>
   </a-layout>

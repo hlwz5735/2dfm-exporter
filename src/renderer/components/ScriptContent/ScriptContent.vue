@@ -7,17 +7,31 @@
         style="height: 100%; overflow-y: auto;"
       >
         <div class="script-item-panel">
-          <h5>{{ script.name }}</h5>
+          <q-bar
+            class="bg-primary text-white"
+          >
+            {{ script.name }}
+          </q-bar>
           <a-form-model>
-            <a-form-item label="脚本项索引">
-              <a-input :value="selectingItemIndex" />
-            </a-form-item>
-            <a-form-item label="类型">
-              <a-input :value="selectingItem.type" />
-            </a-form-item>
-            <a-form-item label="参数列表">
-              <a-textarea :value="selectingItemParams" />
-            </a-form-item>
+            <a-space class="column-2">
+              <a-form-item label="脚本索引">
+                <a-input
+                  :value="scriptIndex"
+                  type="number"
+                  @change="onScriptIndexChanged"
+                />
+              </a-form-item>
+              <a-form-item label="脚本项索引">
+                <a-input
+                  v-model.number="selectingItemIndex"
+                  type="number"
+                />
+              </a-form-item>
+            </a-space>
+            <component
+              :is="itemPanelComponent"
+              :item="selectingItem"
+            />
           </a-form-model>
         </div>
       </a-layout-sider>
@@ -42,10 +56,12 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import _2DFMScript from '@/entity/2dfm-script'
 import _2DFMScriptItem from '@/entity/2dfm-script-item'
 import ScriptItemBlock from './ScriptItemBlock.vue'
+import UnknownItem from './ScriptItemPanel/UnknownItem.vue'
+import AnimationFrameItem from '@/renderer/components/ScriptContent/ScriptItemPanel/AnimationFrameItem.vue'
 
 @Component({
   name: 'ScriptContent',
-  components: { ScriptItemBlock },
+  components: { ScriptItemBlock, AnimationFrameItem, UnknownItem },
 })
 export default class ScriptContent extends Vue {
   @Prop({
@@ -53,6 +69,12 @@ export default class ScriptContent extends Vue {
     required: true,
   })
   script: _2DFMScript
+
+  @Prop({
+    type: Number,
+    default: 0
+  })
+  scriptIndex: number
 
   selectingItemIndex = 0
 
@@ -65,21 +87,13 @@ export default class ScriptContent extends Vue {
     return this.script.items[this.selectingItemIndex]
   }
 
-  get selectingItemParams(): string {
-    let content = ''
-    let count = 0
-    this.selectingItem.parameters?.forEach(byte => {
-      let byteStr = byte.toString(16)
-      if (byteStr.length === 1) {
-        byteStr = '0' + byteStr
-      }
-      content = content + byteStr + ' '
-      if (++count === 32) {
-        content += '\n'
-        count = 0
-      }
-    })
-    return content.toUpperCase()
+  get itemPanelComponent(): Vue {
+    switch (this.selectingItem?.type) {
+      case 12:
+        return AnimationFrameItem
+      default:
+        return UnknownItem
+    }
   }
 
   @Watch('script')
@@ -89,6 +103,10 @@ export default class ScriptContent extends Vue {
 
   onItemClicked(idx: number): void {
     this.selectingItemIndex = idx
+  }
+
+  onScriptIndexChanged(event: InputEvent): void {
+    this.$emit('jump-to', event.target.value - 0)
   }
 }
 </script>

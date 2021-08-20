@@ -4,6 +4,7 @@ import router from './renderer/router'
 import store from './renderer/store'
 import './renderer/plugins/ant-design-vue.js'
 import './renderer/plugins/quasar.js'
+import './assets/global.less'
 
 Vue.config.productionTip = false
 
