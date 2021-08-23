@@ -31,4 +31,7 @@ export default class _2DFMPlayer {
 
     soundCount: number
     sounds: Array<_2DFMSound> = []
+
+    /** 原始字节信息 */
+    bytes: Buffer
 }
