@@ -59,6 +59,12 @@ export default class ScriptTable extends Vue {
         return '残'
       default:
         return '' + this.item?.type
+      // 图移防攻敌声销彩物
+      // 变招动随令
+      // 跳调循 改控
+      // 气血槽
+      // 效停残
+      // 完
     }
   }
 

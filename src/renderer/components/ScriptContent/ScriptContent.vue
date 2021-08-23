@@ -55,13 +55,15 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import _2DFMScript from '@/entity/2dfm-script'
 import _2DFMScriptItem from '@/entity/2dfm-script-item'
+import ScriptItemTypes from '@/entity/script-item/script-item-types'
 import ScriptItemBlock from './ScriptItemBlock.vue'
 import UnknownItem from './ScriptItemPanel/UnknownItem.vue'
+import ScriptHeadItem from '@/renderer/components/ScriptContent/ScriptItemPanel/ScriptHeadItem.vue'
 import AnimationFrameItem from '@/renderer/components/ScriptContent/ScriptItemPanel/AnimationFrameItem.vue'
 
 @Component({
   name: 'ScriptContent',
-  components: { ScriptItemBlock, AnimationFrameItem, UnknownItem },
+  components: { ScriptItemBlock },
 })
 export default class ScriptContent extends Vue {
   @Prop({
@@ -87,9 +89,11 @@ export default class ScriptContent extends Vue {
     return this.script.items[this.selectingItemIndex]
   }
 
-  get itemPanelComponent(): Vue {
+  get itemPanelComponent(): unknown {
     switch (this.selectingItem?.type) {
-      case 12:
+      case ScriptItemTypes.ScriptHead:
+        return ScriptHeadItem
+      case ScriptItemTypes.AnimationFrame:
         return AnimationFrameItem
       default:
         return UnknownItem
@@ -106,7 +110,7 @@ export default class ScriptContent extends Vue {
   }
 
   onScriptIndexChanged(event: InputEvent): void {
-    this.$emit('jump-to', event.target.value - 0)
+    this.$emit('jump-to', Number.parseInt((event.target as HTMLInputElement).value))
   }
 }
 </script>
