@@ -60,7 +60,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import _2DFMPlayer from '@/entity/2dfm-player'
-import ScriptTable from './player/ScriptTable.vue'
+import ScriptTable from './player/ScriptTable/index.vue'
 import BasicInfo from './player/BasicInfo.vue'
 import PaletteInfo from './player/PaletteInfo.vue'
 import SpriteFrameTable from './player/SpriteFrameTable.vue'

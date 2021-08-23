@@ -10,7 +10,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator'
-import _2DFMScriptItem from '../../../../entity/2dfm-script-item'
+import _2DFMScriptItem from '@/entity/2dfm-script-item'
 
 @Component( {
   name: 'UnknownItem',

@@ -35,7 +35,7 @@
           </a-form-model>
         </div>
       </a-layout-sider>
-      <a-layout-content>
+      <a-layout-content style="display: flex; flex-direction: column;">
         <div class="script-item-container">
           <script-item-block
             v-for="(item, index) in script.items"
@@ -45,7 +45,12 @@
             @click="onItemClicked(index)"
           />
         </div>
-        content
+        <Workspace
+          style="flex-grow: 1"
+          :script="script"
+          :selecting-item="selectingItem"
+          :selecting-item-index="selectingItemIndex"
+        />
       </a-layout-content>
     </a-layout>
   </div>
@@ -56,31 +61,33 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import _2DFMScript from '@/entity/2dfm-script'
 import _2DFMScriptItem from '@/entity/2dfm-script-item'
 import ScriptItemTypes from '@/entity/script-item/script-item-types'
-import ScriptItemBlock from './ScriptItemBlock.vue'
+import ScriptItemBlock from '@/renderer/components/script/ScriptItemBlock.vue'
 import UnknownItem from './ScriptItemPanel/UnknownItem.vue'
-import ScriptHeadItem from '@/renderer/components/ScriptContent/ScriptItemPanel/ScriptHeadItem.vue'
-import AnimationFrameItem from '@/renderer/components/ScriptContent/ScriptItemPanel/AnimationFrameItem.vue'
+import ScriptHeadItem from './ScriptItemPanel/ScriptHeadItem.vue'
+import AnimationFrameItem from './ScriptItemPanel/AnimationFrameItem.vue'
+import Workspace from '@/renderer/views/player/ScriptTable/Workspace.vue'
 
 @Component({
   name: 'ScriptContent',
-  components: { ScriptItemBlock },
+  components: { Workspace, ScriptItemBlock },
 })
 export default class ScriptContent extends Vue {
+  /** 脚本原始数据 */
   @Prop({
     type: Object,
     required: true,
   })
   script: _2DFMScript
 
+  /** 脚本的索引 */
   @Prop({
     type: Number,
     default: 0
   })
   scriptIndex: number
 
+  /** 当前选择的脚本项索引 */
   selectingItemIndex = 0
-
-  spriteFrames: ImageBitmap[]
 
   get selectingItem(): _2DFMScriptItem {
     if (this.selectingItemIndex < 0 || this.selectingItemIndex >= this.script?.items?.length) {

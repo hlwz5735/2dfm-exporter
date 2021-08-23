@@ -31,7 +31,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import _2DFMPlayer from '@/entity/2dfm-player'
 import _2DFMScript from '@/entity/2dfm-script'
-import ScriptContent from '@/renderer/components/ScriptContent/ScriptContent.vue'
+import ScriptContent from './ScriptContent.vue'
 @Component({
   name: 'ScriptTable',
   components: { ScriptContent }
