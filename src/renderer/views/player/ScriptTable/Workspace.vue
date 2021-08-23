@@ -9,13 +9,16 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import _2DFMScript from '@/entity/2dfm-script'
 import _2DFMScriptItem from '@/entity/2dfm-script-item'
 import ScriptItemTypes from '@/entity/script-item/script-item-types'
 import AnimationFrame from '@/entity/script-item/animation-frame'
 import { instance as animationFrameTranslatorInstance } from '@/entity/script-item/animation-frame-translator'
 import { Vec2 } from '@/types/Geo'
+import { getImageDataByIndex } from '@/util/2dfm-image-to-image-data'
+import _2DFMPlayer from '@/entity/2dfm-player'
+import { State } from 'vuex-class'
 
 @Component({
   name: 'Workspace'
@@ -39,6 +42,9 @@ export default class Workspace extends Vue {
     required: true,
   })
   selectingItem: _2DFMScriptItem
+
+  @State('player')
+  player: _2DFMPlayer | undefined
 
   centerPoint = Vec2.ZERO
 
@@ -79,6 +85,16 @@ export default class Workspace extends Vue {
     this.redraw()
   }
 
+  @Watch('selectingItemIndex')
+  onSelectingItemIndexChanges(): void {
+    this.redraw()
+  }
+
+  @Watch('script')
+  onScriptChanges(): void {
+    this.redraw()
+  }
+
   resizeCanvas(): void {
     this.canvas.width = (this.$refs.containerDiv as HTMLDivElement).scrollWidth
     this.canvas.height = (this.$refs.containerDiv as HTMLDivElement).scrollHeight
@@ -116,8 +132,19 @@ export default class Workspace extends Vue {
   }
 
   _drawPlayer(): void {
-    // const item = this.nextAnimationFrameItem!
-    // item.picIndex
+    if (!this.player) {
+      return
+    }
+    const item = this.nextAnimationFrameItem!
+    getImageDataByIndex(this.player, item.picIndex).then(canvas => {
+      if (canvas) {
+        const drawPoint = this.centerPoint
+          .copy()
+          .add(-canvas.width / 2, -canvas.height)
+          .add(item.offset.x, item.offset.y)
+        this.ctx.drawImage(canvas, drawPoint.x, drawPoint.y)
+      }
+    })
   }
 }
 </script>

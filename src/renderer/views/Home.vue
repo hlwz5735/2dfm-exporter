@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { State } from 'vuex-class'
+import { Mutation, State } from 'vuex-class'
 import _2DFMPlayer from '@/entity/2dfm-player'
 import ScriptTable from './player/ScriptTable/index.vue'
 import BasicInfo from './player/BasicInfo.vue'
@@ -74,7 +74,10 @@ export default class Home extends Vue {
   @State('playerFilePath')
   filePath: string
 
-  player: _2DFMPlayer | null = null
+  @State('player')
+  player: _2DFMPlayer | undefined
+
+  @Mutation('setPlayer') setPlayer: (player: _2DFMPlayer) => void
 
   menuSelected: string[] = ['ScriptTable']
 
@@ -92,7 +95,7 @@ export default class Home extends Vue {
     }
 
     ipcRenderer.once('read-2dfm-player-file-complete', (_, player) => {
-      this.player = player
+      this.setPlayer(player)
     })
     ipcRenderer.once('read-2dfm-player-file-failed', () => {
       this.$error({

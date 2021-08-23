@@ -8,12 +8,11 @@
 
 <script>
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN'
-import HelloWorld from './components/HelloWorld.vue'
 import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Component } from 'vue-property-decorator'
 
 @Component({
-  components: { HelloWorld }
+  name: 'App'
 })
 export default class App extends Vue {
   zhCN = zhCN
