@@ -19,6 +19,7 @@ module.exports = {
     'body-background': '#fff',
     'layout-header-background': '#20222a',
     'layout-body-background': '#f0f2f5',
+    'border-color-base': 'hsv(0, 0, 85%)',
     'screen-xl': '1200px',
     'screen-sm': '768px',
     'screen-xs': '480px'

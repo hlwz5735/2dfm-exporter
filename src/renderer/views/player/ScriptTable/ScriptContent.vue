@@ -4,7 +4,7 @@
       <a-layout-sider
         theme="light"
         width="260"
-        style="height: 100%; overflow-y: auto;"
+        class="script-item-sider"
       >
         <div class="script-item-panel">
           <q-bar
@@ -34,6 +34,11 @@
             />
           </a-form-model>
         </div>
+        <a-space class="panel-footer">
+          <a-button type="primary">
+            预览
+          </a-button>
+        </a-space>
       </a-layout-sider>
       <a-layout-content style="display: flex; flex-direction: column;">
         <div class="script-item-container">
@@ -132,16 +137,31 @@ export default class ScriptContent extends Vue {
   word-wrap: normal;
   word-break: keep-all;
 }
+.script-item-sider {
+  .script-item-panel {
+    flex: 1 1;
+    overflow-y: auto;
+    padding: 1em;
 
-.script-item-panel {
-  padding: 1em;
-
-  .ant-form-item {
-    margin-bottom: 0.5em;
+    .ant-form-item {
+      margin-bottom: 0.5em;
+    }
+  }
+  .panel-footer {
+    flex: 0 0;
+    border-top: 1px solid @border-color-base;
+    padding: 0.5em;
   }
 }
 </style>
+
 <style lang="less">
+.script-item-sider {
+  & > div {
+    display: flex;
+    flex-direction: column;
+  }
+}
 .script-content {
   .ant-form-item {
     .ant-form-item-label {

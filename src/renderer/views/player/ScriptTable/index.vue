@@ -28,18 +28,17 @@
 
 <script lang="ts">
 
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import _2DFMPlayer from '@/entity/2dfm-player'
 import _2DFMScript from '@/entity/2dfm-script'
 import ScriptContent from './ScriptContent.vue'
+import { State } from 'vuex-class'
 @Component({
   name: 'ScriptTable',
   components: { ScriptContent }
 })
 export default class ScriptTable extends Vue {
-  @Prop({
-    required: true
-  })
+  @State('player')
   player: _2DFMPlayer
 
   selectingIndex = 0
