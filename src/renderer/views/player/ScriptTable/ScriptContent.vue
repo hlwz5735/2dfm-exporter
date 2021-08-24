@@ -35,7 +35,10 @@
           </a-form-model>
         </div>
         <a-space class="panel-footer">
-          <a-button type="primary">
+          <a-button
+            type="primary"
+            @click="onShowPreviewClicked"
+          >
             预览
           </a-button>
         </a-space>
@@ -67,10 +70,10 @@ import _2DFMScript from '@/entity/2dfm-script'
 import _2DFMScriptItem from '@/entity/2dfm-script-item'
 import ScriptItemTypes from '@/entity/script-item/script-item-types'
 import ScriptItemBlock from '@/renderer/components/script/ScriptItemBlock.vue'
+import Workspace from './Workspace.vue'
 import UnknownItem from './ScriptItemPanel/UnknownItem.vue'
 import ScriptHeadItem from './ScriptItemPanel/ScriptHeadItem.vue'
 import AnimationFrameItem from './ScriptItemPanel/AnimationFrameItem.vue'
-import Workspace from '@/renderer/views/player/ScriptTable/Workspace.vue'
 
 @Component({
   name: 'ScriptContent',
@@ -123,6 +126,10 @@ export default class ScriptContent extends Vue {
 
   onScriptIndexChanged(event: InputEvent): void {
     this.$emit('jump-to', Number.parseInt((event.target as HTMLInputElement).value))
+  }
+
+  onShowPreviewClicked(): void {
+    this.$store.commit('setShowPreview', true)
   }
 }
 </script>

@@ -8,8 +8,13 @@ class AnimationFrameTranslator implements Translator<AnimationFrame> {
     const item = new AnimationFrame()
 
     item.freezeTime = byteToUShort(bytes, 0)
-    item.picIndex = byteToUShort(bytes, 2)
+    const picIndexBuffer = new Uint8Array(2)
+    picIndexBuffer[0] = bytes[2]
+    picIndexBuffer[1] = bytes[3] & 0b00111111
+    item.picIndex = byteToUShort(picIndexBuffer)
     item.offset = new Vec2(byteToShort(bytes, 4), byteToShort(bytes, 6))
+    item.flipX = !!(bytes[3] & 0b01000000)
+    item.flipY = !!(bytes[3] & 0b10000000)
     item.fixDir = bytes[8] === 1
 
     return item

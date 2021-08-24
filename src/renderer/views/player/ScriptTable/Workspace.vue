@@ -3,22 +3,27 @@
     ref="containerDiv"
     class="clip-overflow"
   >
-    <canvas ref="theCanvas"></canvas>
+    <canvas
+      ref="theCanvas"
+      @mousedown="onMouseDown"
+      @mousemove="onMouseMove"
+      @mouseup="onMouseUp"
+    ></canvas>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop, Watch } from 'vue-property-decorator'
+import { State } from 'vuex-class'
+import { Vec2 } from '@/types/Geo'
 import _2DFMScript from '@/entity/2dfm-script'
 import _2DFMScriptItem from '@/entity/2dfm-script-item'
+import _2DFMPlayer from '@/entity/2dfm-player'
 import ScriptItemTypes from '@/entity/script-item/script-item-types'
 import AnimationFrame from '@/entity/script-item/animation-frame'
 import { instance as animationFrameTranslatorInstance } from '@/entity/script-item/animation-frame-translator'
-import { Vec2 } from '@/types/Geo'
-import { getImageDataByIndex } from '@/util/2dfm-image-to-image-data'
-import _2DFMPlayer from '@/entity/2dfm-player'
-import { State } from 'vuex-class'
+import { flipX, flipXY, flipY } from '@/util/image-data-util'
 
 @Component({
   name: 'Workspace'
@@ -48,6 +53,9 @@ export default class Workspace extends Vue {
 
   centerPoint = Vec2.ZERO
 
+  rightDragging = false
+  lastMousePos = Vec2.ZERO
+
   get canvas(): HTMLCanvasElement {
     return this.$refs.theCanvas as HTMLCanvasElement
   }
@@ -71,18 +79,13 @@ export default class Workspace extends Vue {
     window.addEventListener('resize', this.onWindowResize)
     setTimeout(() => {
       this.resizeCanvas()
-      this.centerPoint = new Vec2(this.canvas.width / 2, this.canvas.height / 3 * 2)
+      this.centerView()
       this.redraw()
     }, 500)
   }
 
   beforeDestroy(): void {
     window.removeEventListener('resize', this.onWindowResize)
-  }
-
-  onWindowResize(): void {
-    this.resizeCanvas()
-    this.redraw()
   }
 
   @Watch('selectingItemIndex')
@@ -95,9 +98,41 @@ export default class Workspace extends Vue {
     this.redraw()
   }
 
+  onWindowResize(): void {
+    this.resizeCanvas()
+    this.redraw()
+  }
+
+  onMouseDown(e: MouseEvent): void {
+    if (e.button === 2) {
+      this.lastMousePos = new Vec2(e.clientX, e.clientY)
+      this.rightDragging = true
+    }
+  }
+
+  onMouseMove(e: MouseEvent): void {
+    if (this.rightDragging) {
+      const mousePos = new Vec2(e.clientX, e.clientY)
+      const offset = new Vec2(mousePos.x - this.lastMousePos.x, mousePos.y - this.lastMousePos.y)
+      this.centerPoint = this.centerPoint.add(offset)
+      this.lastMousePos = mousePos
+      this.redraw()
+    }
+  }
+
+  onMouseUp(e: MouseEvent): void {
+    if (e.button === 2) {
+      this.rightDragging = false
+    }
+  }
+
   resizeCanvas(): void {
     this.canvas.width = (this.$refs.containerDiv as HTMLDivElement).scrollWidth
     this.canvas.height = (this.$refs.containerDiv as HTMLDivElement).scrollHeight
+  }
+
+  centerView(): void {
+    this.centerPoint = new Vec2(Math.round(this.canvas.width / 2), Math.round(this.canvas.height / 3 * 2))
   }
 
   redraw(): void {
@@ -115,9 +150,15 @@ export default class Workspace extends Vue {
     this.ctx.fillStyle = '#6b6b6b'
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
 
-    this.ctx.fillStyle = '#fff'
-    this.ctx.fillRect(0, this.centerPoint.y, this.canvas.width, 4)
-    this.ctx.fillRect(this.centerPoint.x, 0,4, this.canvas.height)
+    this.ctx.strokeStyle = '#fff'
+    this.ctx.lineWidth = 4
+    this.ctx.beginPath()
+    this.ctx.moveTo(0, this.centerPoint.y)
+    this.ctx.lineTo(this.canvas.width, this.centerPoint.y)
+    this.ctx.moveTo(this.centerPoint.x, 0)
+    this.ctx.lineTo(this.centerPoint.x, this.canvas.height)
+    this.ctx.stroke()
+    this.ctx.closePath()
 
     this.ctx.restore()
   }
@@ -136,14 +177,29 @@ export default class Workspace extends Vue {
       return
     }
     const item = this.nextAnimationFrameItem!
-    getImageDataByIndex(this.player, item.picIndex).then(canvas => {
-      if (canvas) {
-        const drawPoint = this.centerPoint
-          .copy()
-          .add(-canvas.width / 2, -canvas.height)
-          .add(item.offset.x, item.offset.y)
-        this.ctx.drawImage(canvas, drawPoint.x, drawPoint.y)
+    this.$store.dispatch('getImage', item.picIndex).then(imageData => {
+      if (!imageData) {
+        this._drawDisabled()
+        return
       }
+      if (item.flipX && item.flipY) {
+        imageData = flipXY(imageData)
+      } else if (item.flipX) {
+        imageData = flipX(imageData)
+      } else if (item.flipY) {
+        imageData = flipY(imageData)
+      }
+      const canvas = document.createElement('canvas') as HTMLCanvasElement
+      canvas.width = imageData.width
+      canvas.height = imageData.height
+      const ctx = canvas.getContext('2d')!
+      ctx.putImageData(imageData, 0, 0)
+
+      const drawPoint = this.centerPoint
+        .copy()
+        .add(Math.round(-canvas.width / 2), -canvas.height)
+        .add(item.offset.x, item.offset.y)
+      this.ctx.drawImage(canvas, drawPoint.x, drawPoint.y)
     })
   }
 }

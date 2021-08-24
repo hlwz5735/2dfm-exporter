@@ -1,10 +1,10 @@
 import _2DFMPlayer from '@/entity/2dfm-player'
 import _2DFMSpriteFrame from '@/entity/2dfm-sprite-frame'
-import { decompress } from '@/util/2dfm-image-decompress'
 import _2DFMPalette from '@/entity/2dfm-palette'
+import { decompress } from '@/util/2dfm-image-decompress'
 import { readPalette } from '@/util/2dfm-palette-reader'
 
-export async function getImageDataByIndex(player: _2DFMPlayer, index = 0): Promise<HTMLCanvasElement | undefined> {
+export function getImageDataByIndex(player: _2DFMPlayer, index = 0): ImageData | undefined {
   const sprite = player.spriteFrames[index]
 
   if (!sprite || sprite.width * sprite.height === 0) {
@@ -22,10 +22,6 @@ export async function getImageDataByIndex(player: _2DFMPlayer, index = 0): Promi
   }
 
   const { width, height } = sprite
-  const canvas = document.createElement('canvas') as HTMLCanvasElement
-  canvas.width = sprite.width
-  canvas.height = sprite.height
-
   let palette: _2DFMPalette
 
   let imageBuffer
@@ -52,7 +48,18 @@ export async function getImageDataByIndex(player: _2DFMPlayer, index = 0): Promi
     }
   }
 
-  const imageData = new ImageData(imageDataBuffer, width, height)
+  return new ImageData(imageDataBuffer, width, height)
+}
+
+export function getImageCanvasByIndex(player: _2DFMPlayer, index = 0): HTMLCanvasElement | undefined {
+  const imageData = getImageDataByIndex(player, index)
+  if (!imageData) {
+    return
+  }
+
+  const canvas = document.createElement('canvas') as HTMLCanvasElement
+  canvas.width = imageData.width
+  canvas.height = imageData.height
   canvas.getContext('2d')!.putImageData(imageData, 0, 0)
   return canvas
 }
