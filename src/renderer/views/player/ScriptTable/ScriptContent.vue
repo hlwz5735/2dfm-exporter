@@ -143,7 +143,7 @@ export default class ScriptContent extends Vue {
   white-space: nowrap;
   word-wrap: normal;
   word-break: keep-all;
-  flex: 0 0 24px;
+  flex: 0 0 42px;
 }
 .script-item-sider {
   .script-item-panel {
