@@ -20,6 +20,7 @@ class AnimationFrameTranslator implements Translator<AnimationFrame> {
     return item
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   encode(item: AnimationFrame): Uint8Array {
     return new Uint8Array()
   }

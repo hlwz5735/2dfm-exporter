@@ -8,6 +8,7 @@ class ScriptHeadTranslator implements Translator<ScriptHead> {
     return item
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   encode(item: ScriptHead): Uint8Array {
     return new Uint8Array();
   }

@@ -51,7 +51,7 @@ export default class Workspace extends Vue {
   @State('player')
   player: _2DFMPlayer | undefined
 
-  centerPoint = Vec2.ZERO
+  viewPoint = Vec2.ZERO
 
   rightDragging = false
   lastMousePos = Vec2.ZERO
@@ -114,7 +114,7 @@ export default class Workspace extends Vue {
     if (this.rightDragging) {
       const mousePos = new Vec2(e.clientX, e.clientY)
       const offset = new Vec2(mousePos.x - this.lastMousePos.x, mousePos.y - this.lastMousePos.y)
-      this.centerPoint = this.centerPoint.add(offset)
+      this.viewPoint = this.viewPoint.add(offset)
       this.lastMousePos = mousePos
       this.redraw()
     }
@@ -132,7 +132,7 @@ export default class Workspace extends Vue {
   }
 
   centerView(): void {
-    this.centerPoint = new Vec2(Math.round(this.canvas.width / 2), Math.round(this.canvas.height / 3 * 2))
+    this.viewPoint = new Vec2(Math.round(this.canvas.width / 2), Math.round(this.canvas.height / 3 * 2))
   }
 
   redraw(): void {
@@ -153,10 +153,10 @@ export default class Workspace extends Vue {
     this.ctx.strokeStyle = '#fff'
     this.ctx.lineWidth = 4
     this.ctx.beginPath()
-    this.ctx.moveTo(0, this.centerPoint.y)
-    this.ctx.lineTo(this.canvas.width, this.centerPoint.y)
-    this.ctx.moveTo(this.centerPoint.x, 0)
-    this.ctx.lineTo(this.centerPoint.x, this.canvas.height)
+    this.ctx.moveTo(0, this.viewPoint.y)
+    this.ctx.lineTo(this.canvas.width, this.viewPoint.y)
+    this.ctx.moveTo(this.viewPoint.x, 0)
+    this.ctx.lineTo(this.viewPoint.x, this.canvas.height)
     this.ctx.stroke()
     this.ctx.closePath()
 
@@ -195,7 +195,7 @@ export default class Workspace extends Vue {
       const ctx = canvas.getContext('2d')!
       ctx.putImageData(imageData, 0, 0)
 
-      const drawPoint = this.centerPoint
+      const drawPoint = this.viewPoint
         .copy()
         .add(Math.round(-canvas.width / 2), -canvas.height)
         .add(item.offset.x, item.offset.y)

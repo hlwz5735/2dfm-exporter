@@ -89,7 +89,7 @@ export default class ScriptTable extends Vue {
     border-left: 2px solid black;
   }
   &.selected {
-    background-color: darkblue;
+    background-color: @primary-color;
     color: white;
   }
 }

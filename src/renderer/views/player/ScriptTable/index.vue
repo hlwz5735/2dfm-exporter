@@ -40,6 +40,7 @@
         </q-bar>
         <q-card-section class="preview-content">
           <script-preview
+            :script="selectingScript"
           />
         </q-card-section>
       </q-card>
