@@ -132,12 +132,12 @@ export async function read2DFMPlayerFile(path: string): Promise<_2DFMPlayer> {
         const sound = new _2DFMSound()
         sound.offset = offset
         size = 42
-        read = buffer.slice(offset, offset + size)
+        const soundBytes = Uint8Array.from(buffer.slice(offset, offset + size))
         offset += size
-        sound.unknownFlag = byteToInt(read)
-        sound.name = decodeToGb2312(read.slice(4, 36)) || '非法内容'
-        sound.size = byteToInt(read, 36)
-        sound.unknownFlag2 = byteToUShort(read, 40)
+        sound.unknownFlag = byteToInt(soundBytes)
+        sound.name = decodeToGb2312(soundBytes.slice(4, 36)) || '非法内容'
+        sound.size = byteToInt(soundBytes, 36)
+        sound.unknownFlag2 = byteToUShort(soundBytes, 40)
 
         offset += sound.size
 
