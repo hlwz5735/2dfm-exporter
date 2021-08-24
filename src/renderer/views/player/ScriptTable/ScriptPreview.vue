@@ -110,6 +110,9 @@ export default class ScriptPreview extends Vue {
     if (this.noFrameItem) {
       return
     }
+    if (this.timeWaiting === Infinity) {
+      return
+    }
     // 如果等待时间已到达，则执行下一个脚本
     if (this.timeWaiting <= 0) {
       this.runningScriptIdx += 1
@@ -118,7 +121,7 @@ export default class ScriptPreview extends Vue {
         return
       }
       // 渲染新的动画帧
-      this.timeWaiting = item.freezeTime * 10
+      this.timeWaiting = item.freezeTime === 0 ? Infinity : item.freezeTime * 10
       this._drawStage()
       this._drawPlayer(item)
     } else {
