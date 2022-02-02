@@ -11,11 +11,15 @@ export default class _2DFMPalette {
         color.rawData[0] = buffer[index + 2]
         color.rawData[1] = buffer[index + 1]
         color.rawData[2] = buffer[index]
-        if (this.isPrivate) {
-            color.rawData[3] = (color.rawData[0] + color.rawData[1] + color.rawData[2] === 0) ? 0 : 255
+
+        if ((color.rawData[0] + color.rawData[1] + color.rawData[2]) === 0) {
+            color.rawData[3] = 0
+        } else if (this.isPrivate) {
+            color.rawData[3] = 255
         } else {
             color.rawData[3] = buffer[index + 3] === 0 ? 0 : 255
         }
+
         this.colors.push(color)
     }
 }

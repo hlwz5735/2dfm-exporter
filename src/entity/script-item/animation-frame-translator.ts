@@ -15,7 +15,7 @@ class AnimationFrameTranslator implements Translator<AnimationFrame> {
     item.offset = new Vec2(byteToShort(bytes, 4), byteToShort(bytes, 6))
     item.flipX = !!(bytes[3] & 0b01000000)
     item.flipY = !!(bytes[3] & 0b10000000)
-    item.fixDir = bytes[8] === 1
+    item.fixDir = bytes[8] !== 0
 
     return item
   }

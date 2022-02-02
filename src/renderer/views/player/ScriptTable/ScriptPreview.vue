@@ -116,7 +116,7 @@ export default class ScriptPreview extends Vue {
     // 如果等待时间已到达，则执行下一个脚本
     if (this.timeWaiting <= 0) {
       this.runningScriptIdx += 1
-      const item = this._getNextFrameItem(this.runningScriptIdx)
+      const item = this._getNextFrameItem()
       if (!item) {
         return
       }
@@ -129,7 +129,7 @@ export default class ScriptPreview extends Vue {
     }
   }
 
-  _getNextFrameItem(startIndex: number): AnimationFrame | undefined {
+  _getNextFrameItem(): AnimationFrame | undefined {
     if (this.script.itemCount === 1) {
       const nowItem = this.script.items[0]
       if (nowItem.type !== ScriptItemTypes.AnimationFrame) {
@@ -144,7 +144,7 @@ export default class ScriptPreview extends Vue {
     const nowItem = this.script.items[this.runningScriptIdx]
     if (nowItem.type !== ScriptItemTypes.AnimationFrame) {
       this.runningScriptIdx += 1
-      return this._getNextFrameItem(startIndex)
+      return this._getNextFrameItem()
     } else {
       return AnimationFrameTranslator.decode(this.script.items[this.runningScriptIdx].parameters)
     }
